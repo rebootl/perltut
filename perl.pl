@@ -33,4 +33,5 @@ print "  \$str length is: ", length($str), "\n";
 # list
 
 @col_list = ("red", "blue", "green", "violet", "black");
-
+print @col_list . "\n";
+#print $#col_ist . "\n";
