@@ -1,0 +1,91 @@
+#!/usr/bin/perl -w
+
+my( %item, @item ); # Artikel, liste
+
+# use-cases
+sub add_item (@); # fügt ein neues Element hinzu
+sub rem_item (@); # entfernt ein bestehendes Element
+sub get_item (@); # gibt die Elemente aus
+sub set_item (@); # bearbeitet ein bestehendes Element
+
+# main
+my $input = "\n";
+do {
+    chop $input; # entfernt das Zeilenende am Ende der Eingabe
+    if( ! $input ) {}# do nothing
+    elsif( $input eq 'V' ) { exit; } # verlässt das Programm
+    elsif( $input eq 'H' ) { @item=add_item( @item ) } # soll einen neuen Artikel hinzufügen => to do
+    elsif( $input eq 'E' ) { @item=rem_item( @item ) } # soll eine bestehenden Artikel entfernen => to do
+    elsif( $input eq 'A' ) { get_item( @item ); } # soll die Artikel mit Bezeichnung und Menge ausgeben => to do
+    elsif( $input eq 'B' ) { set_item( @item ) } # soll einen bestehenden Artikel bearbeiten => to do
+    else {print 'ungültige Eingabe';} # Fehlermeldung
+    print "(H)hinzufügen (A)uflisten (B)earbeiten (E)ntfernen (V)erlassen\n"; # Eingabeaufforderung
+} while( $input = <STDIN> ); # liest eine Eingabezeile ein
+
+# helpers
+sub _new_unique ($@); # liest ein neues Element ein bis es eindeutig ist oder abgebrochen wird
+sub _new_present ($@); # liest ein neues Element ein bis es gefunden ist oder oder abgebrochen wird 
+sub _new ($); # liest ein neues Element ein
+sub _pos ($@); # sucht ein Element
+
+## implementation
+
+sub add_item (@) {
+    ( $item{ name } = _new_unique( 'Artikelbezeichnung', @_ )) || return @_;
+    ( $item{quantity} = _new( 'Artikelmenge' )) || return @_;
+    push( @_, ( $item{ name }, $item{quantity} ));
+    return @_;
+}
+
+sub rem_item (@) {
+    (( $item{ name }, my $i ) = _new_present( 'Artikelbezeichnung', @_ ))[ 0 ] || return @_;
+    splice( @_, $i, 2 );
+    return @_;
+}
+
+sub get_item (@) {
+    for( my $i=0; $i<@_; $i+=2 ) { printf "%s\t%s\n", $_[ $i ], $_[ $i+1 ]; }
+    return 1;
+}
+
+sub set_item (@) {
+    (( $item{ name }, my $i ) = _new_present( 'Artikelbezeichnung', @_ ))[ 0 ] || return 0;
+    $item{ name } = _new_unique( "Artikelbezeichnung => $item[ $i ]", @_ );
+    $_[ $i ] = $item{ name } if $item{ name };
+    $item{ quantity } = _new( "Artikelmenge => $item[ $i+1 ]" );
+    $_[ $i+1 ] = $item{ quantity } if $item{ quantity };
+    return 1;
+}
+
+sub _new_unique ($@) {
+    my( $request, $id ) = ( shift, '' );
+    while( 1 ) {
+        ( $id = _new( $request )) || last;
+        if( _pos( $id, @_ ) < @_ ) { print "$request bereits vorhanden\n"; }
+        else { last; }
+    }
+    return $id;
+}
+
+sub _new_present ($@) {
+    my( $request, $id, $i ) = ( shift, '', 0 );    
+    while( 1 ) {
+        ( $id = _new( $request )) || last;
+        unless( ($i = _pos( $id, @_ )) < @_ ) { print "$request nicht vorhanden\n"; }
+        else { last; }
+    }
+    return( $id, $i );
+}
+sub _new ($) {
+    print shift, ' = ';
+    my $input = <STDIN>;
+    chop $input;
+    return $input;
+}
+
+sub _pos ($@) {
+    my $id = shift;
+    for( my $i=0; $i < @_; $i+=2 ) { ( $_[ $i ] eq $id ) && return $i; }
+    return scalar @_;
+}
+
