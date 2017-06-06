@@ -14,20 +14,18 @@ package List;
 #
 # also see ref: - https://docstore.mik.ua/orelly/perl3/prog/ch12_04.htm
 sub new {
-    my $arg0 = $_[0];
-    my $class = ref($arg0) || $arg0;
+    #my $arg0 = shift;
+    #my $class = ref($arg0) || $arg0;
+    # ==> simplified
+    # --> why is this done ?
+    my $class = shift;
 
     my $this = {
-        storage_path = 'list.dat',  # (use a default attribute)
+        storage_path => 'list.dat',  # (use a default attribute)
         @_,                         # Override previous attributes (see ref.)
     };
 
     bless($this, $class);
-
-    # --> needed ?
-    #$this->clear();
-
-    $this->{'filepath'} = $_[1];
 
     # --> load stored list here
     $this->{'list'} = load_pseudo();
