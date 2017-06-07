@@ -6,6 +6,10 @@
 
 package List;
 
+use strict;
+use warnings;
+use Article;
+
 # (from tutorial 7.3)
 # ("constructor")
 #
@@ -27,8 +31,8 @@ sub new {
 
     bless($this, $class);
 
-    # --> load stored list here
-    $this->{'list'} = load_pseudo();
+    $this->{'list'} = [];
+    $this->load_pseudo();
 
     return $this;
 }
@@ -53,7 +57,18 @@ sub editEntry {}
 sub deleteEntry {}
 
 # store the list on filesystem
-sub store {}
+sub store {
+    my $this = $_[0];
+
+    my $filehandle_F;
+    my $retval = open($filehandle_F, ">" . $this->{'storage_path'});
+
+    # debug
+    #print $retval . "\n";
+
+
+
+}
 
 # load the list from filesystem
 sub load {}
@@ -61,24 +76,24 @@ sub load {}
 # get some pseudo list data cause too lazy
 # to write fs function now
 sub load_pseudo {
-    my @list = ();
+    my $this = $_[0];
 
     # some pseudo data
-    %art1 = (
-        'name' => "Mein Art. 1",
-        'amount' => 25000,
-        'company' => "MYCOMP.org"
+    my $art_1 = Article->new(
+        'name' => "Keyboard ABC 5",
+        'amount' => 10,
+        'company' => "MYCOMP.org",
+        'unit' => "Stk"
     );
-    %art2 = (
+    my $art_2 = Article->new(
         'name' => "BUBUArt",
-        'amount' => "3 Stk.",
-        'company' => "FOOCOMP & Co."
+        'amount' => 5,
+        'company' => "FOOCOMP & Co.",
+        'unit' => "M"
     );
 
-    push(@list, \%art1);
-    push(@list, \%art2);
-
-    return \@list;
+    push(@{$this->{'list'}}, $art_1);
+    push(@{$this->{'list'}}, $art_2);
 }
 
 1;
