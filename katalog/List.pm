@@ -4,11 +4,13 @@
 #
 #
 
-package List;
-
 use strict;
 use warnings;
-use Article;
+
+package List;
+
+# (==> incl. external)
+#use Article;
 
 # (from tutorial 7.3)
 # ("constructor")
@@ -25,11 +27,14 @@ sub new {
     my $class = shift;
 
     my $this = {
-        storage_path => 'list.dat',  # (use a default attribute)
+        storage_path => "list.dat", # (use a default attribute)
+        entry_type => "Article",
         @_,                         # Override previous attributes (see ref.)
     };
 
     bless($this, $class);
+
+    $this->{'entry_type'}->can('new') or die "Noooo... :(\n";
 
     $this->{'list'} = [];
     $this->load_pseudo();
@@ -41,7 +46,7 @@ sub new {
 #sub clear {
 #    my $this = $_[0];
 #}
-sub clear {}
+#sub clear {}
 
 # evtl. getter for the list
 #sub getList {
@@ -58,20 +63,30 @@ sub deleteEntry {}
 
 # store the list on filesystem
 sub store {
-    my $this = $_[0];
+    my $this = shift;
+
+    my $str_list = "";
+    foreach my $entry (@{$this->{'list'}}) {
+
+        my $line = "";
+        foreach my $key (sort keys %{$entry}) {
+            $line .= %{$entry}{$key} . "\t";
+        }
+        $str_list .= $line . "\n";
+    }
 
     my $filehandle_F;
-    my $retval = open($filehandle_F, ">" . $this->{'storage_path'});
+    open($filehandle_F, ">" . $this->{'storage_path'}) or die;
+    print $filehandle_F $str_list;
+}
 
-    # debug
-    #print $retval . "\n";
+# load the list from filesystem
+sub load() {
+    my $this = shift;
 
 
 
 }
-
-# load the list from filesystem
-sub load {}
 
 # get some pseudo list data cause too lazy
 # to write fs function now
