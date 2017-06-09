@@ -28,10 +28,8 @@ sub new {
 }
 
 sub make_uid() {
-    my $this = $_[0];
-
-    # (test)
-    #$this->{'uid'} = "FOOOOOOO";
+    #my $this = $_[0];
+    my $this = shift;
 
     $this->{'uid'} = Helper::escape_str_uid($this->{'name'} . "_" . $this->{'company'});
 }

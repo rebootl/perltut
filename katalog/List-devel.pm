@@ -6,6 +6,18 @@
 
 package List;
 
+
+# structure of the list
+#
+# (
+#   obj1,
+#   obj2,
+#   obj3,
+#   obj4,
+#   ..
+# )
+
+
 # (from tutorial 7.3)
 # ("constructor")
 #

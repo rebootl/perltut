@@ -5,8 +5,6 @@
 use strict;
 use warnings;
 
-# using the list object
-
 use Article;
 use List;
 
@@ -20,24 +18,10 @@ if ($list_obj_1->{'list'}->[0]->{'name'} eq "Keyboard ABC 5") {
 }
 else { print "FAILED\n"; }
 
-
 # store list to file
 
 $list_obj_1->store();
 
-$list_obj_1->load();
-
 # --> check file line 1
 
-print "----------\n";
-
-
-
-### debug
-
-#my %h1 = (
-#    'a' => "test1",
-#    'b' => "test XYZ",
-#);
-#
-#print %h1{'a'} . "\n";
+$list_obj_1->load();

@@ -21,5 +21,3 @@ else { print "FAILED\n"; }
 print "article uid corr.: ";
 if ($article_1->{'uid'} eq "maus-USB_Logitech") { print "PASS\n"; }
 else { print "FAILED\n"; }
-
-print "----------\n";
