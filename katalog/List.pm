@@ -10,7 +10,7 @@ use warnings;
 package List;
 
 # (==> incl. external)
-#use Article;
+use Article;
 
 # (from tutorial 7.3)
 # ("constructor")
